@@ -4,11 +4,11 @@ DwhHistoryCleanerJob:
       settings-key: DwhHistoryCleanerJob-LogsConnString
       types:
         - AzureTableStorage
-    LogsConnString:
+    RawDwhDataAccountConnString:
       settings-key: DwhHistoryCleanerJob-RawDwhDataAccountConnString
       types:
         - AzureTableStorage
-    LogsConnString:
+    ConvertedDwhDataAccountConnString:
       settings-key: DwhHistoryCleanerJob-ConvertedDwhDataAccountConnString
       types:
         - AzureTableStorage
