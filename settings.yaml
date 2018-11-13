@@ -1,0 +1,26 @@
+DwhHistoryCleanerJob:
+  Db:
+    LogsConnString:
+      settings-key: DwhHistoryCleanerJob-LogsConnString
+      types:
+        - AzureTableStorage
+    LogsConnString:
+      settings-key: DwhHistoryCleanerJob-RawDwhDataAccountConnString
+      types:
+        - AzureTableStorage
+    LogsConnString:
+      settings-key: DwhHistoryCleanerJob-ConvertedDwhDataAccountConnString
+      types:
+        - AzureTableStorage
+SlackNotifications:
+    AzureQueue:
+        ConnectionString:
+            settings-key: SlackNotificationsConnString
+            types:
+                - AzureTableStorage
+        QueueName:
+            settings-key: SlackQueueName
+MonitoringServiceClient:
+    MonitoringServiceUrl:
+        settings-key: MonitoringServiceUrl
+
