@@ -51,7 +51,14 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
                     bool deletedBlobs = false;
                     do
                     {
-                        var blobsResult = await container.ListBlobsSegmentedAsync(containerToken);
+                        var blobsResult = await container.ListBlobsSegmentedAsync(
+                            "",
+                            true,
+                            BlobListingDetails.None,
+                            null,
+                            containerToken,
+                            null,
+                            null);
                         foreach (var blob in blobsResult.Results)
                         {
                             var cloudBlob = blob as CloudBlob;
