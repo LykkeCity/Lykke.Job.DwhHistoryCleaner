@@ -93,7 +93,7 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
             if (cleanedContainers.Count > 0)
                 _log.Info($"Cleaned {cleanedContainers.Count} containers from {blobClient.Credentials.AccountName}: {string.Join(',', cleanedContainers)}");
             else
-                _log.Info($"All containers have no files to be cleaned");
+                _log.Info($"All containers from {blobClient.Credentials.AccountName} have no files to be cleaned");
         }
     }
 }
