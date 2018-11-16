@@ -11,6 +11,8 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
 {
     public class AccountHistoryCleaner: IAccountHistoryCleaner
     {
+        private const int _maxParalelTasksCount = 50;
+
         private readonly TimeSpan _preservePeriod = TimeSpan.FromHours(24);
         private readonly ILog _log;
         private readonly string _rawDwhDataAccountConnStrings;
@@ -49,6 +51,7 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
                 {
                     BlobContinuationToken containerToken = null;
                     bool deletedBlobs = false;
+                    var deleteTasks = new List<Task>();
                     do
                     {
                         var blobsResult = await container.ListBlobsSegmentedAsync(
@@ -68,7 +71,12 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
                                 await cloudBlob.FetchAttributesAsync();
                             if (now - cloudBlob.Properties.LastModified.Value > _preservePeriod)
                             {
-                                await cloudBlob.DeleteIfExistsAsync();
+                                deleteTasks.Add(cloudBlob.DeleteIfExistsAsync());
+                                if (deleteTasks.Count >= _maxParalelTasksCount)
+                                {
+                                    await Task.WhenAll(deleteTasks);
+                                    deleteTasks.Clear();
+                                }
                                 if (!deletedBlobs)
                                     deletedBlobs = true;
                             }
@@ -77,11 +85,15 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
                     } while (containerToken != null);
                     if (deletedBlobs)
                         cleanedContainers.Add(container.Name);
+                    if (deleteTasks.Count > 0)
+                        await Task.WhenAll(deleteTasks);
                 }
                 token = containersResult.ContinuationToken;
             } while (token != null);
             if (cleanedContainers.Count > 0)
                 _log.Info($"Cleaned {cleanedContainers.Count} containers from {blobClient.Credentials.AccountName}: {string.Join(',', cleanedContainers)}");
+            else
+                _log.Info($"All containers have no files to be cleaned");
         }
     }
 }
