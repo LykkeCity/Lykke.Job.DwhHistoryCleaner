@@ -13,7 +13,7 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
     {
         private const int _maxParalelTasksCount = 50;
 
-        private readonly TimeSpan _preservePeriod = TimeSpan.FromHours(24);
+        private readonly TimeSpan _preservePeriod;
         private readonly ILog _log;
         private readonly string _rawDwhDataAccountConnStrings;
         private readonly string _convertedDwhDataAccountConnStrings;
@@ -21,11 +21,13 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
         public AccountHistoryCleaner(
             ILogFactory logFactory,
             string rawDwhDataAccountConnStrings,
-            string convertedDwhDataAccountConnStrings)
+            string convertedDwhDataAccountConnStrings,
+            TimeSpan preservedPeriod)
         {
             _log = logFactory.CreateLog(this);
             _rawDwhDataAccountConnStrings = rawDwhDataAccountConnStrings;
             _convertedDwhDataAccountConnStrings = convertedDwhDataAccountConnStrings;
+            _preservePeriod = preservedPeriod;
         }
 
         public async Task CleanHistoryAsync()

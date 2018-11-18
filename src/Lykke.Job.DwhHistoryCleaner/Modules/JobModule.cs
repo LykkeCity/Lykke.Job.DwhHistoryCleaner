@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Common;
 using Lykke.Job.DwhHistoryCleaner.Domain.Services;
 using Lykke.Job.DwhHistoryCleaner.DomainServices;
@@ -43,7 +44,8 @@ namespace Lykke.Job.DwhHistoryCleaner.Modules
                 .As<IAccountHistoryCleaner>()
                 .SingleInstance()
                 .WithParameter("rawDwhDataAccountConnStrings", _settings.Db.RawDwhDataAccountConnString)
-                .WithParameter("convertedDwhDataAccountConnStrings", _settings.Db.ConvertedDwhDataAccountConnString);
+                .WithParameter("convertedDwhDataAccountConnStrings", _settings.Db.ConvertedDwhDataAccountConnString)
+                .WithParameter("preservedPeriod", _settings.PreservedPeriod ?? TimeSpan.FromHours(24));
         }
     }
 }

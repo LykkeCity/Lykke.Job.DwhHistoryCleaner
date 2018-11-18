@@ -12,6 +12,8 @@ DwhHistoryCleanerJob:
       settings-key: DwhHistoryCleanerJob-ConvertedDwhDataAccountConnString
       types:
         - AzureTableStorage
+    PreservedPeriod:
+      settings-key: DwhHistoryCleanerJob-PreservedPeriod
 SlackNotifications:
     AzureQueue:
         ConnectionString:
