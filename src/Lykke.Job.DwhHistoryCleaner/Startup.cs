@@ -142,7 +142,7 @@ namespace Lykke.Job.DwhHistoryCleaner
             try
             {
                 // NOTE: Job not yet recieve and process IsAlive requests here
-
+                _healthNotifier.Notify("Initializing", Program.EnvInfo);
                 await ApplicationContainer.Resolve<IStartupManager>().StartAsync();
                 _healthNotifier.Notify("Started", Program.EnvInfo);
 
