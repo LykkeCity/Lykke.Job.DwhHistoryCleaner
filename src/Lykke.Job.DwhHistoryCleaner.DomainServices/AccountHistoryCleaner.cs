@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Common.Log;
@@ -17,6 +18,12 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
         private readonly ILog _log;
         private readonly string _rawDwhDataAccountConnStrings;
         private readonly string _convertedDwhDataAccountConnStrings;
+        private readonly List<string> _skipFiles = new List<string>
+        {
+            "TableStructure.str2",
+            "lastblob.txt",
+            "lastStructureUpdate.txt",
+        };
 
         public AccountHistoryCleaner(
             ILogFactory logFactory,
@@ -68,6 +75,8 @@ namespace Lykke.Job.DwhHistoryCleaner.DomainServices
                         {
                             var cloudBlob = blob as CloudBlob;
                             if (cloudBlob == null)
+                                continue;
+                            if (_skipFiles.Any(f => cloudBlob.Name.Contains(f)))
                                 continue;
                             if (!cloudBlob.Properties.LastModified.HasValue)
                                 await cloudBlob.FetchAttributesAsync();
