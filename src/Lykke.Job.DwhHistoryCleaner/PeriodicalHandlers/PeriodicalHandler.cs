@@ -15,7 +15,7 @@ namespace Lykke.Job.DwhHistoryCleaner.PeriodicalHandlers
 
         public PeriodicalHandler(ILogFactory logFactory, IAccountHistoryCleaner accountHistoryCleaner)
         {
-            _timerTrigger = new TimerTrigger(nameof(PeriodicalHandler), TimeSpan.FromHours(6), logFactory);
+            _timerTrigger = new TimerTrigger(nameof(PeriodicalHandler), TimeSpan.FromHours(1), logFactory);
             _timerTrigger.Triggered += Execute;
 
             _accountHistoryCleaner = accountHistoryCleaner;
